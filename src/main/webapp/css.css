@@ -1,0 +1,61 @@
+
+#listQA{
+
+    color: darkred;
+    font-style: italic;
+    font-size: larger;
+    padding-left: 30%;
+    padding-top: 40px;
+    font-weight: bold;
+    line-height: 1.6;
+}
+
+#altaIntrebare{
+    padding-left: 40%;
+    font-weight: bold;
+    color: darkslategrey;
+    padding-top: 30px;
+    padding-bottom: 20px;
+    font-size: 150%;
+    margin: auto;
+
+}
+
+#sendSomething {
+    opacity: 1;
+    padding-left: 40%;
+    margin: auto;
+
+}
+
+.imageContent {
+    height: 200px;
+}
+
+#alertMessage {
+    color: darkred;
+    font-size: 200%;
+    font-weight: bold;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB46GuUoNdAuNbGHUTaer9a_bx7YWIoeqJZoeAgHHQ1Y9vWi3B3A") ;
+    background-size: 100%;
+}
+
+#left {
+    float: left;
+    width: 23%;
+    margin-left: 0px;
+    margin-top: 0px;
+    padding-right: 5%;
+    height: 240%;
+    background-image:  url("http://www.aktual24.ro/wp-content/uploads/2017/01/iordache2-610x300.png");
+    background-size: 100%;
+}
+
+#add {
+    cursor: hand;
+}
