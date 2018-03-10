@@ -1,5 +1,7 @@
 package ir;
 
+import login.DBOper;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,22 +9,19 @@ import java.util.List;
 
 public class SingleListPersons {
 
-    private List<IR> listofNames = new ArrayList<>();
+    private List<ToDoItem> listofNames = new ArrayList<>();
 
-    public void addInTheListOfNames(IR s, int fkuser) throws ClassNotFoundException, SQLException {
+    public void addInTheListOfNames(ToDoItem s, int fkuser) throws ClassNotFoundException, SQLException {
 
-        if (s.getIntrebare().trim().length() > 0 && s.getRaspuns().trim().length() > 0) {
+        if (s.getName()!=null && s.getName().trim().length() > 0 ) {
             Class.forName("org.postgresql.Driver");
 
-            final String URL = "jdbc:postgresql://54.93.65.5:5432/laura7";
-            final String USERNAME = "fasttrackit_dev";
-            final String PASSWORD = "fasttrackit_dev";
 
-            Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            Connection conn = DriverManager.getConnection(DBOper.URL, DBOper.USERNAME, DBOper.PASSWORD);
 
-            PreparedStatement pSt = conn.prepareStatement("INSERT INTO ir (intrebare, raspuns, fkuser) VALUES (?,?, ?)");
-            pSt.setString(1, s.getIntrebare());
-            pSt.setString(2, s.getRaspuns());
+            PreparedStatement pSt = conn.prepareStatement("INSERT INTO todoitems (name, done, fkuser) VALUES (?,?, ?)");
+            pSt.setString(1, s.getName());
+            pSt.setInt(2, s.getDone());
             pSt.setInt(3, fkuser);
 
             int rowsInserted = pSt.executeUpdate();
@@ -36,18 +35,17 @@ public class SingleListPersons {
 
         Class.forName("org.postgresql.Driver");
 
-        final String URL = "jdbc:postgresql://54.93.65.5:5432/laura7";
-        final String USERNAME = "fasttrackit_dev";
-        final String PASSWORD = "fasttrackit_dev";
 
-        Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 
-        PreparedStatement pSt = conn.prepareStatement("SELECT intrebare, raspuns FROM ir where fkuser="+iduser);
+
+        Connection conn = DriverManager.getConnection(DBOper.URL, DBOper.USERNAME, DBOper.PASSWORD);
+
+        PreparedStatement pSt = conn.prepareStatement("SELECT id, name FROM todoitems where fkuser="+iduser+" and done=0");
         ResultSet rs = pSt.executeQuery();
         while(rs.next()) {
-            IR ir = new IR();
-            ir.setIntrebare(rs.getString("intrebare"));
-            ir.setRaspuns(rs.getString("raspuns"));
+            ToDoItem ir = new ToDoItem();
+            ir.setId(rs.getInt("id"));
+            ir.setName(rs.getString("name"));
             listofNames.add(ir);
         }
 
@@ -57,6 +55,22 @@ public class SingleListPersons {
         return listofNames;
     }
 
+    public void markDone(int id, int fkuser) throws ClassNotFoundException, SQLException {
+
+        Class.forName("org.postgresql.Driver");
+
+
+        Connection conn = DriverManager.getConnection(DBOper.URL, DBOper.USERNAME, DBOper.PASSWORD);
+
+        PreparedStatement pSt = conn.prepareStatement("UPDATE todoitems SET DONE=1 WHERE ID=? and fkuser=?");
+        pSt.setInt(1, id);
+        pSt.setInt(2, fkuser);
+
+        int rowsInserted = pSt.executeUpdate();
+
+        pSt.close();
+        conn.close();
+    }
 }
 
 

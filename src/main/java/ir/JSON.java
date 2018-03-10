@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 
 
-@WebServlet("/demoRW")
+@WebServlet("/tl")
 public class JSON extends HttpServlet {
 
     @Override
@@ -25,6 +25,38 @@ public class JSON extends HttpServlet {
             read(req, resp);
         else if (action != null && action.equals("write"))
             write(req, resp);
+        else if (action != null && action.equals("markdone"))
+            markdone(req, resp);
+    }
+
+    private void markdone(HttpServletRequest req, HttpServletResponse resp) {
+
+        String id = req.getParameter("id");
+
+        int idtask = Integer.parseInt(id);
+
+        int fkuser=-1;
+
+        HttpSession s = req.getSession();
+        Object o = s.getAttribute("userid");
+        if(o!=null){
+            fkuser=(Integer)o;
+        }
+
+        if(fkuser!=-1) {
+
+            SingleListPersons listOfNames = new SingleListPersons();
+            try {
+
+
+                listOfNames.markDone(idtask, fkuser);
+            } catch (ClassNotFoundException e) {
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private void read(HttpServletRequest req, HttpServletResponse resp) {
@@ -41,7 +73,7 @@ public class JSON extends HttpServlet {
 
         JSONObject json = new JSONObject();
         try {
-            json.put("pers", listQA.getListOfNames(iduser));
+            json.put("todo", listQA.getListOfNames(iduser));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -52,9 +84,8 @@ public class JSON extends HttpServlet {
 
     private void write(HttpServletRequest req, HttpServletResponse resp) {
 
-        String que = req.getParameter("newName");
-        String res = req.getParameter("r");
-        IR ir = new IR(que, res);
+        String name = req.getParameter("newName");
+        ToDoItem ir = new ToDoItem(name);
 
         int fkuser=-1;
 

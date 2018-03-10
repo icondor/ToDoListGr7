@@ -14,7 +14,7 @@
 <body>
 
 <head>
-    <title>Question and answer application</title>
+    <title>To Do App</title>
 
     <link rel="stylesheet" href="css.css">
 
@@ -23,60 +23,69 @@
 
 <body>
 
-<div id="left">
-
-</div>
-
-<div>
-    <div id="listQA">
-        <ol></ol>
-    </div>
-
-    </br>
-
-    </br>
 
 
-    <div class="imageContent">
 
-        <h3 id="altaIntrebare">Alta intrebare?</h3>
-        <div id ="sendSomething">
-            <input type="text" id="namePerson" name="namePerson" placeholder="Intrebare" />
-            <input type="text" id="response" name="response" placeholder="Raspuns" />
-            <input type="button" id="add" value="Trimite"  onClick="addName()"/>
+<div id="sendSomething"></div>
+
+        <div id ="newtodo">
+            <input type="text" id="nameToDo" name="nameToDo" placeholder="do something" />
+            <input type="button" id="add" value="Trimite"  onClick="addNewToDo()"/>
         </div>
+
+        </br>
+
+    <div id="listOfToDo">
+        aici o sa fie taskurile
+        <ul></ul>
     </div>
-</div>
+
+
+
+    </br>
+
+
+
 </body>
 
 <script>
     // just doing an ajax call
-    function loadQuestions() {
+    function loadToDo() {
         $.ajax({
-            url: 'demoRW?action=read'
+            url: 'tl?action=read'
         }).done(function (response) {
-            putQuestionsInHTML(response.pers);
+            putToDoInHTML(response.todo);
         });
     }
-    function putQuestionsInHTML(ir) {
-        var divQA = document.getElementById('listQA');
-        var ol = document.getElementsByTagName('ol')[0];
-        var list = '';
-        for (var i = 0; i < ir.length; i++) {
-            var question = ir[i].intrebare;
-            var answer = ir[i].raspuns;
-            var qa = '<li><p>' + question + '<p>' + answer + '</p>' + '</p></li>';
-            list = list + qa;
+    function putToDoInHTML(todo) {
+
+        var list = document.getElementById('listOfToDo').getElementsByTagName('ul')[0];
+        var listHtml = '';
+
+        for (var i = 0; i < todo.length; i++) {
+            var task = todo[i];
+            //var checked = task.done ? ' checked=""' : '';
+            var taskHtml =
+                '<li>' +
+                '<input type="checkbox" value="' + task.id + '" onclick=markDone("' + task.id + '")>' +
+                task.name +
+                '</li>';
+            listHtml += taskHtml;
         }
-        ol.innerHTML = list;
+        list.innerHTML = listHtml;
+
     }
-    loadQuestions();
-    function addName() {          //trimitem date
-        var question = document.getElementById('namePerson').value;
-        var resp = document.getElementById('response').value;
-        if(question.trim().length > 0 && resp.trim().length > 0) {
+
+    loadToDo();
+
+
+
+    function addNewToDo() {          //trimitem date
+        var nametodo = document.getElementById('nameToDo').value;
+
+        if(nametodo.trim().length > 0) {
             $.ajax({
-                url: 'demoRW?action=write&newName=' + question + '&r=' + resp
+                url: 'tl?action=write&newName=' + nametodo
             }).done(function (response) {
                 location.href = "index.jsp";
             });
@@ -84,11 +93,23 @@
         else {
             var alertDiv = document.createElement("p");
             alertDiv.setAttribute("id", "alertMessage")
-            var alertContent = document.createTextNode("You must insert data in both fields!");
+            var alertContent = document.createTextNode("You must insert data!");
             alertDiv.appendChild(alertContent);
             var fieldsDiv = document.getElementById("sendSomething");
             fieldsDiv.appendChild(alertDiv);
         }
+    }
+
+    function markDone(id) {
+
+
+        $.ajax({
+            url: 'tl?action=markdone&id=' + id
+        }).done(function (response) {
+            location.href = "index.jsp";
+        });
+
+
     }
 </script>
 

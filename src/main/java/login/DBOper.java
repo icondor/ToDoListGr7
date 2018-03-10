@@ -3,9 +3,9 @@ package login;
 import java.sql.*;
 
 public class DBOper {
-    final static String URL = "jdbc:postgresql://54.93.65.5:5432/laura7";
-    final static String USERNAME = "fasttrackit_dev";
-    final static String PASSWORD = "fasttrackit_dev";
+    public final static String URL = "jdbc:postgresql://localhost:5432/todolistapp";
+    public final static String USERNAME = "userdb";
+    public final static String PASSWORD = "password1";
 
     /* -1 daca nu am gasit , id-ul daca am gasit */
     public int login (String user, String pwd) {
